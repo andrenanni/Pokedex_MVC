@@ -1,0 +1,12 @@
+Configuração do Git local:
+
+git config --global user.name andrenanni
+git config --global user.email andre-nanni@hotmail.com
+
+1 - Criar um projeto MVC:
+
+dotnet new mvc -o Pokedex
+
+2 - Para executar o projeto
+
+dotnet watch run
