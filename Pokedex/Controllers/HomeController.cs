@@ -16,13 +16,13 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {   
+        // usign (tipo seguindo do nome)
         using(StreamReader leitor = new("Data\\pokemons.json"))
         {
             string dados = leitor.ReadToEnd();
             var pokemons = JsonSerializer.Deserialize<List<Pokemon>>(dados);
             return View(pokemons);
         }
-        return View();
     }
 
     public IActionResult Privacy()
