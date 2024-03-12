@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text.Json;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Mvc;
 using Pokedex.Models;
 
@@ -16,38 +17,16 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {   
-        // Criar uma lista
-        var pokemons = new List<Pokemon>();
-        // usign (tipo seguindo do nome)
-        using(StreamReader leitor = new("Data\\pokemons.json"))
-        {
-            string dados = leitor.ReadToEnd();
-            pokemons = JsonSerializer.Deserialize<List<Pokemon>>(dados);
-        }
-
-        List<Tipo> tipos = [];
-        using (StreamReader leitor = new("Data\\tipos.json")){
-            string dados = leitor.ReadToEnd();
-            tipos = JsonSerializer.Deserialize<List<Tipo>>(dados);
-        }
+        List<Pokemon> pokemons = GetPokemons();
+        List<Tipo> tipo = GetTipos();
         ViewData["Tipos"] = tipos;
         return View(pokemons);
     }
 
     public IActionResult Details(int id)
     {
-        List<Pokemon> pokemons = [];
-        using (StreamReader leitor = new("Data\\pokemons.json"))
-        {
-            string dados = leitor.ReadToEnd();
-            pokemons = JsonSerializer.Deserialize<List<Pokemon>>(dados);
-        }
-        List<Tipo> tipos = [];
-        using (StreamReader leitor = new("Data\\tipos.json"))
-        {
-            string dados = leitor.ReadToEnd();
-            tipos = JsonSerializer.Deserialize<List<Tipo>>(dados);
-        }
+        List<Pokemon> pokemons = GetPokemons();
+        List<Tipo> tipos = GetTipos();
         DetailsVM details = new(){
             Tipos = tipos,
             Atual = pokemons.FirstOrDefault(p => p.Numero == id),
@@ -56,6 +35,25 @@ public class HomeController : Controller
         };
         return View(details);
     }
+
+    private List<Pokemon> GetPokemons()
+    {
+        using (StreamReader leitor = new("Data\\pokemons.json"))
+        {
+            string dados = leitor.ReadToEnd();
+            return JsonSerializer.Deserialize<List<Pokemon>>(dados);
+        }
+    }
+
+    private List<Tipo> GetTipos()
+    {
+        using (StreamReader leitor = new("Date\\tipos.json"))
+        {
+            string dados = leitor.ReadToEnd();
+            return JsonSerializer.Deserialize<List<Tipo>>(dados);
+        }
+    }
+
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
